@@ -74,44 +74,49 @@ namespace SkalProj_Datastrukturer_Minne {
              */
 
 
-            Console.WriteLine("Enter +input to add, -input to remove, or q to exit");
+            var listHandler = new ListHandler();
+
+            CollectionExaminer(listHandler);
+
+            //
+            // Console.WriteLine("Enter +input to add, -input to remove, or q to exit");
+            // // Console.WriteLine();
+            // // Console.WriteLine("Available commands:");
+            // // Console.WriteLine("+input to add");
+            // // Console.WriteLine("-input to remove");
+            // // Console.WriteLine("q to quit");
             // Console.WriteLine();
-            // Console.WriteLine("Available commands:");
-            // Console.WriteLine("+input to add");
-            // Console.WriteLine("-input to remove");
-            // Console.WriteLine("q to quit");
-            Console.WriteLine();
-
-            List<string> theList = new List<string>();
-
-            while (true) {
-                var input = Console.ReadLine();
-                if (input is null) continue;
-                char nav = input[0];
-                string value = input.Substring(1);
-
-                switch (nav) {
-                    case '+':
-                        theList.Add(value);
-                        Console.WriteLine($"Added {value} to the list");
-                        Console.WriteLine($"Count: {theList.Count}, Capacity: {theList.Capacity}");
-                        break;
-                    case '-':
-                        var success = theList.Remove(value);
-                        var outputString = success
-                            ? $"Removed one {value} from the list"
-                            : $"Could not find a {value} in the list";
-                        Console.WriteLine(outputString);
-                        Console.WriteLine($"Count: {theList.Count}, Capacity: {theList.Capacity}");
-                        break;
-                    case 'q':
-                        Console.WriteLine("Leaving list examiner...");
-                        return;
-                    default:
-                        Console.WriteLine("+input or -input or q only");
-                        break;
-                }
-            }
+            //
+            // List<string> theList = new List<string>();
+            //
+            // while (true) {
+            //     var input = Console.ReadLine();
+            //     if (input is null) continue;
+            //     char nav = input[0];
+            //     string value = input.Substring(1);
+            //
+            //     switch (nav) {
+            //         case '+':
+            //             theList.Add(value);
+            //             Console.WriteLine($"Added {value} to the list");
+            //             Console.WriteLine($"Count: {theList.Count}, Capacity: {theList.Capacity}");
+            //             break;
+            //         case '-':
+            //             var success = theList.Remove(value);
+            //             var outputString = success
+            //                 ? $"Removed one {value} from the list"
+            //                 : $"Could not find a {value} in the list";
+            //             Console.WriteLine(outputString);
+            //             Console.WriteLine($"Count: {theList.Count}, Capacity: {theList.Capacity}");
+            //             break;
+            //         case 'q':
+            //             Console.WriteLine("Leaving list examiner...");
+            //             return;
+            //         default:
+            //             Console.WriteLine("+input or -input or q only");
+            //             break;
+            //     }
+            // }
         }
 
 
@@ -130,32 +135,33 @@ namespace SkalProj_Datastrukturer_Minne {
              * Create a switch with cases to enqueue items or dequeue items
              * Make sure to look at the queue after Enqueueing and Dequeueing to see how it behaves
              */
-            
-            Console.WriteLine("Enter +input to add, - to remove, or q to exit");
-            Console.WriteLine();
 
-            var queue = new Queue<string>();
 
-            while (true) {
-                var input = Console.ReadLine();
-                if (input is null) continue;
-                char nav = input[0];
-                string value = input.Substring(1);
-                
-                switch (nav) {
-                    case '+':
-                        // queue.Enqueue();
-                        break;
-                    case '-':
-                        break;
-                    case 'q':
-                        return;
-                    default:
-                        break;
-                }
-                
-                
-            }
+            // Console.WriteLine("Enter +input to add, - to remove, or q to exit");
+            // Console.WriteLine();
+            //
+            // var queue = new Queue<string>();
+            //
+            // while (true) {
+            //     var input = Console.ReadLine();
+            //     if (input is null) continue;
+            //     char nav = input[0];
+            //     string value = input.Substring(1);
+            //     
+            //     switch (nav) {
+            //         case '+':
+            //             // queue.Enqueue();
+            //             break;
+            //         case '-':
+            //             break;
+            //         case 'q':
+            //             return;
+            //         default:
+            //             break;
+            //     }
+            //     
+            //     
+            // }
         }
 
         /// <summary>
@@ -177,15 +183,84 @@ namespace SkalProj_Datastrukturer_Minne {
              */
         }
 
+
+        private static void CollectionExaminer(ICollectionHandler collectionHandler) {
+            PrintMenu(collectionHandler.MenuConf);
+
+            while (true) {
+                var input = Console.ReadLine();
+                if (input is null) continue;
+                var nav = input[0];
+                var value = input.Substring(1);
+
+                switch (nav) {
+                    case '+':
+                        AddAction(collectionHandler, value);
+                        break;
+                    case '-':
+                        RemoveAction(collectionHandler, value);
+                        break;
+                    case 'l':
+                        ListAction(collectionHandler);
+                        break;
+                    case 'q':
+                        Console.WriteLine($"Leaving {collectionHandler.MenuConf.CollectionName} examiner...");
+                        return;
+                }
+            }
+        }
+
         
+        private static void ListAction(ICollectionHandler collectionHandler) {
+            AddAction(collectionHandler, "Kalle");
+            AddAction(collectionHandler, "Greta");
+            RemoveAction(collectionHandler, "");
+            AddAction(collectionHandler, "Stina");
+            RemoveAction(collectionHandler, "");
+            AddAction(collectionHandler, "Olle");
+        }
+
         
+        private static void RemoveAction(ICollectionHandler collectionHandler, string value) {
+            string statusUpdate;
+            var removed = collectionHandler.Remove(value);
+
+            var result = removed.Match(
+                Succ: res => $"Removed {res} from {collectionHandler.MenuConf.CollectionName}",
+                Fail: err => $"Could not remove {value}: {err.Message}");
+            Console.WriteLine(result);
+            statusUpdate = collectionHandler.GetRepresentation();
+            Console.WriteLine(statusUpdate);
+        }
 
 
-        private record Menu(string AddName, string RemoveName, string QuitName, string CollectionName, string? RunPresetName = null); 
+        private static void AddAction(ICollectionHandler collectionHandler, string value) {
+            collectionHandler.Add(value);
+            Console.WriteLine($"Added {value} to {collectionHandler.MenuConf.CollectionName}");
+            var statusUpdate = collectionHandler.GetRepresentation();
+            Console.WriteLine(statusUpdate);
+        }
+
+
+        private static void PrintMenu(MenuConf menuConf) {
+            Console.WriteLine("Available commands:");
+            Console.WriteLine($"+input to add to {menuConf.CollectionName}");
+            var removeCommand = menuConf.RemoveTakesArgument ? "-input" : "-";
+            Console.WriteLine($"{removeCommand} to remove from {menuConf.CollectionName}");
+
+            if (menuConf.GivePresetOption) {
+                Console.WriteLine($"l to run preset input sequence (ICA queue)");
+            }
+
+            Console.WriteLine($"q to quit");
+        }
+
+
+        private record MenuConf(string CollectionName, bool RemoveTakesArgument, bool GivePresetOption);
 
 
         private interface ICollectionHandler {
-            Menu Menu { get; }
+            MenuConf MenuConf { get; }
             void Add(string item);
             Result<string> Remove(string? item = default);
             string GetRepresentation();
@@ -193,46 +268,36 @@ namespace SkalProj_Datastrukturer_Minne {
 
 
         private class ListHandler : ICollectionHandler {
-            public Menu Menu { get; } = new Menu("+", "-", "q", "list", "l");
+            public MenuConf MenuConf { get; } = new MenuConf("list", true, false);
 
             private readonly List<string?> _list = new List<string?>();
-
 
             public void Add(string? item) {
                 _list.Add(item);
             }
-        
-            public Result<string> Remove(string? item) {
 
+            public Result<string> Remove(string? item) {
                 if (string.IsNullOrEmpty(item)) {
                     var error = "Null or empty input";
-                    return new Result<string>(error); 
+                    return new Result<string>(error);
                 }
-                
+
                 var didRemove = _list.Remove(item);
 
                 if (!didRemove) {
                     var error = $"Could not find {item}";
-                    return new Result<string>(error); 
+                    return new Result<string>(error);
                 }
 
-                return item; 
+                return item;
             }
-            
-        
+
             public string GetRepresentation() {
                 return $"Count: {_list.Count}, Capacity: {_list.Capacity}";
             }
         }
-
-
-
-
-
     }
 }
-
-
 
 
 // private class QueueHandler<T> : ICollectionHandler<T> {
@@ -258,56 +323,50 @@ namespace SkalProj_Datastrukturer_Minne {
 // }
 
 
+// private static void DisplayCollectionMenu() {
+//     Console.WriteLine();
+//     Console.WriteLine("Available commands: +string or -string to add or remove");
+//     Console.WriteLine("+string to add");
+//     Console.WriteLine("-string to remove");
+//     Console.WriteLine("q to quit");
+// }
 
-
-
-
-
-        // private static void DisplayCollectionMenu() {
-        //     Console.WriteLine();
-        //     Console.WriteLine("Available commands: +string or -string to add or remove");
-        //     Console.WriteLine("+string to add");
-        //     Console.WriteLine("-string to remove");
-        //     Console.WriteLine("q to quit");
-        // }
-
-        // private static void RunCollectionLoop(ICollection<string> collection,
-        //     Action<ICollection<string>, string> addAction, Action<ICollection<string>, string> removeAction,
-        //     Func<ICollection<string>, string> getRepresentation) {
-        //     DisplayCollectionMenu();
-        //
-        //     while (true) {
-        //         var input = Console.ReadLine();
-        //         if (input is null) continue;
-        //         char nav = input[0];
-        //         string value = input.Substring(1);
-        //
-        //         switch (nav) {
-        //             case '+':
-        //                 addAction(collection, value);
-        //                 // addAction() collection.adda(value);
-        //                 Console.WriteLine($"Added {value} to {collection.GetType()}");
-        //                 var representation = getRepresentation(collection); 
-        //                 if (collection is List<string> list) {
-        //                     Console.WriteLine($"Count: {list.Count}, Capacity: {list.Capacity}");
-        //                 }
-        //
-        //                 break;
-        //             case '-':
-        //                 removeAction(collection, value);
-        //                 Console.WriteLine($"Tried removing one {value} from list");
-        //                 Console.WriteLine($"Count: {theList.Count}, Capacity: {theList.Capacity}");
-        //                 break;
-        //             case 'q':
-        //                 Console.WriteLine("Leaving list examiner...");
-        //                 return;
-        //             default:
-        //                 Console.WriteLine("input +string or -string or q only");
-        //                 break;
-        //         }
-        //     }
-        // }
-
+// private static void RunCollectionLoop(ICollection<string> collection,
+//     Action<ICollection<string>, string> addAction, Action<ICollection<string>, string> removeAction,
+//     Func<ICollection<string>, string> getRepresentation) {
+//     DisplayCollectionMenu();
+//
+//     while (true) {
+//         var input = Console.ReadLine();
+//         if (input is null) continue;
+//         char nav = input[0];
+//         string value = input.Substring(1);
+//
+//         switch (nav) {
+//             case '+':
+//                 addAction(collection, value);
+//                 // addAction() collection.adda(value);
+//                 Console.WriteLine($"Added {value} to {collection.GetType()}");
+//                 var representation = getRepresentation(collection); 
+//                 if (collection is List<string> list) {
+//                     Console.WriteLine($"Count: {list.Count}, Capacity: {list.Capacity}");
+//                 }
+//
+//                 break;
+//             case '-':
+//                 removeAction(collection, value);
+//                 Console.WriteLine($"Tried removing one {value} from list");
+//                 Console.WriteLine($"Count: {theList.Count}, Capacity: {theList.Capacity}");
+//                 break;
+//             case 'q':
+//                 Console.WriteLine("Leaving list examiner...");
+//                 return;
+//             default:
+//                 Console.WriteLine("input +string or -string or q only");
+//                 break;
+//         }
+//     }
+// }
 
 
 // string input = Console.ReadLine();
