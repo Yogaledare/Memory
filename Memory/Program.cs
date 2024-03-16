@@ -18,7 +18,7 @@ namespace Memory {
             // MainLoop();
 
 
-            var fib = RecursiveFibonacci(18);
+            var fib = IterativeFibonacci(18);
 
             Console.WriteLine(fib);
         }
@@ -223,27 +223,58 @@ namespace Memory {
 
 
         private static int IterativeFibonacci(int n) {
-            int[] sequence = new int[n + 1];
+            if (n == 0) return 0;
+            if (n == 1) return 1;
 
-            for (int i = 0; i < n + 1; i++) {
-                switch (i) {
-                    case 0:
-                        sequence[0] = 0;
-                        break;
-                    case 1:
-                        sequence[1] = 1;
-                        break;
-                    default:
-                        sequence[i] = sequence[i - 1] + sequence[i - 2];
-                        break;
-                }
+            var prev = 0;
+            var curr = 1;
+
+            for (int i = 2; i <= n; i++) {
+                var next = prev + curr;
+                prev = curr;
+                curr = next;
             }
 
-            return sequence[n];
+            return curr;
         }
-
     }
 }
+
+
+// var i = 2;
+//
+// while (true) {
+//     var next = prev + curr;
+//     prev = curr;
+//     curr = next;
+//
+//     if (i++ >= n) {
+//         return curr; 
+//     }
+// }
+
+
+
+
+// int[] sequence = new int[n + 1];
+
+// for (int i = 0; i < n + 1; i++) {
+// switch (i) {
+// case 0:
+// sequence[0] = 0;
+// break;
+// case 1:
+// sequence[1] = 1;
+// break;
+// default:
+// sequence[i] = sequence[i - 1] + sequence[i - 2];
+// break;
+// }
+// }
+
+// return sequence[n];
+
+
 
 
 //                 
