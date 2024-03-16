@@ -5,6 +5,7 @@ using System.Text;
 using LanguageExt;
 using LanguageExt.ClassInstances.Const;
 using LanguageExt.Common;
+using Memory.CollectionExaminer.Handlers;
 using static LanguageExt.Prelude;
 
 namespace Memory {
@@ -78,7 +79,7 @@ namespace Memory {
         /// </summary>
         static void ExamineList() {
             var listHandler = new ListHandler();
-            CollectionExaminer(listHandler);
+            ExamineCollection(listHandler);
         }
 
 
@@ -87,7 +88,7 @@ namespace Memory {
         /// </summary>
         static void ExamineQueue() {
             var queueHandler = new QueueHandler();
-            CollectionExaminer(queueHandler);
+            ExamineCollection(queueHandler);
         }
 
         /// <summary>
@@ -95,7 +96,7 @@ namespace Memory {
         /// </summary>
         static void ExamineStack() {
             var stackHandler = new StackHandler();
-            CollectionExaminer(stackHandler);
+            ExamineCollection(stackHandler);
         }
 
 
@@ -109,8 +110,7 @@ namespace Memory {
             var input = Console.ReadLine();
             var balanced = HasStringBalancedBrackets(input ?? "");
             var insert = balanced ? "balanced" : "unbalanced";
-            var output = $"String has {insert} brackets";
-            Console.WriteLine(output);
+            Console.WriteLine($"The string has {insert} brackets");
         }
 
 
@@ -175,7 +175,7 @@ namespace Memory {
         }
 
 
-        private static void CollectionExaminer(ICollectionHandler collectionHandler) {
+        private static void ExamineCollection(ICollectionHandler collectionHandler) {
             PrintMenu(collectionHandler.MenuConf);
 
             while (true) {
@@ -232,10 +232,10 @@ namespace Memory {
         }
 
         // char nav, Option<string> maybeValue
-        private static bool ProcessCommand(ICollectionHandler collectionHandler, Command command ) {
+        private static bool ProcessCommand(ICollectionHandler collectionHandler, Command command) {
             var nav = command.Nav;
-            var maybeValue = command.MaybeValue; 
-            
+            var maybeValue = command.MaybeValue;
+
             switch (nav) {
                 case '+':
                     AddAction(collectionHandler, maybeValue);
@@ -248,6 +248,7 @@ namespace Memory {
                         Console.WriteLine("Bad input. Try again.");
                         break;
                     }
+
                     ICAExampleAction(collectionHandler);
                     break;
                 case 'q':
