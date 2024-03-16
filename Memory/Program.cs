@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Memory.CollectionExaminer.Handlers;
-using static Memory.CollectionExaminer.CollectionExaminer; 
+using static Memory.CollectionExaminer.CollectionExaminer;
 
 namespace Memory {
     partial class Program {
@@ -15,9 +15,18 @@ namespace Memory {
             // var rev = ReverseText("12345");
             // Console.WriteLine(rev);
 
-            MainLoop();
+            // MainLoop();
+
+
+            var fib = RecursiveFibonacci(18);
+
+            Console.WriteLine(fib);
         }
 
+
+
+        
+        
 
         private static void MainLoop() {
             while (true) {
@@ -169,7 +178,70 @@ namespace Memory {
         }
 
 
-        // char nav, Option<string> maybeValue
+        // Assuming 0 to be counted as even number #1
+        private static int RecursiveEven(int n) {
+            if (n < 0) {
+                throw new ArgumentException("Natural numbers only");
+            }
+
+            if (n == 1) {
+                return 0;
+            }
+
+            return RecursiveEven(n - 1) + 2;
+        }
+
+
+        // Assuming the sequence 0, 1, 1, 2, 3, 5, ... (https://en.wikipedia.org/wiki/Fibonacci_sequence)
+        private static int RecursiveFibonacci(int n) {
+            if (n < 0) {
+                throw new ArgumentException("Natural numbers only");
+            }
+
+            if (n == 0) {
+                return 0;
+            }
+
+            if (n == 1) {
+                return 1;
+            }
+
+            return RecursiveFibonacci(n - 2) + RecursiveFibonacci(n - 1);
+        }
+
+
+        // Assuming 0 to be counted as even number #1
+        private static int IterativeEven(int n) {
+            int result = 0;
+
+            for (int i = 0; i < n - 1; i++) {
+                result += 2;
+            }
+
+            return result;
+        }
+
+
+        private static int IterativeFibonacci(int n) {
+            int[] sequence = new int[n + 1];
+
+            for (int i = 0; i < n + 1; i++) {
+                switch (i) {
+                    case 0:
+                        sequence[0] = 0;
+                        break;
+                    case 1:
+                        sequence[1] = 1;
+                        break;
+                    default:
+                        sequence[i] = sequence[i - 1] + sequence[i - 2];
+                        break;
+                }
+            }
+
+            return sequence[n];
+        }
+
     }
 }
 
