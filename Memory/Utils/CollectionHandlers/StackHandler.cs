@@ -1,8 +1,7 @@
 ﻿using LanguageExt;
 using LanguageExt.Common;
-using Stack = System.Collections.Stack;
 
-namespace Memory.CollectionExaminer.Handlers;
+namespace Memory.Utils.CollectionHandlers;
 
 public class StackHandler : ICollectionHandler {
     public MenuConf MenuConf { get; } = new MenuConf("stack", false, true);

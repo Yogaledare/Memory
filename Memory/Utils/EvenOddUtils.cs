@@ -1,7 +1,7 @@
-﻿namespace Memory.CollectionExaminer;
+﻿namespace Memory.Utils;
 
 public static class EvenOddUtils {
-    private static int RecursiveEven(int n) {
+    public static int RecursiveEven(int n) {
         if (n < 0) {
             throw new ArgumentException("Natural numbers only");
         }
@@ -13,11 +13,7 @@ public static class EvenOddUtils {
         return RecursiveEven(n - 1) + 2;
     }
 
-    private static int RecursiveFibonacci(int n) {
-        if (n < 0) {
-            throw new ArgumentException("Natural numbers only");
-        }
-
+    public static int RecursiveFibonacci(int n) {
         if (n == 0) {
             return 0;
         }
@@ -29,7 +25,7 @@ public static class EvenOddUtils {
         return RecursiveFibonacci(n - 2) + RecursiveFibonacci(n - 1);
     }
 
-    private static int IterativeEven(int n) {
+    public static int IterativeEven(int n) {
         var result = 0;
 
         for (var i = 1; i <= n; i++) {

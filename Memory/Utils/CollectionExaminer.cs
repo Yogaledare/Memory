@@ -1,8 +1,8 @@
 ﻿using LanguageExt;
 using LanguageExt.Common;
-using Memory.CollectionExaminer.Handlers;
+using Memory.Utils.CollectionHandlers;
 
-namespace Memory.CollectionExaminer;
+namespace Memory.Utils;
 
 public static class CollectionExaminer {
     public static void ExamineCollection(ICollectionHandler collectionHandler) {

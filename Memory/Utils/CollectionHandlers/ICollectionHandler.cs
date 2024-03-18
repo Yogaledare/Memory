@@ -1,7 +1,7 @@
 ﻿using LanguageExt;
 using LanguageExt.Common;
 
-namespace Memory.CollectionExaminer.Handlers;
+namespace Memory.Utils.CollectionHandlers;
 
 public interface ICollectionHandler {
     MenuConf MenuConf { get; }

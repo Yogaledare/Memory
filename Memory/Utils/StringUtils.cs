@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Memory.CollectionExaminer;
+namespace Memory.Utils;
 
 public static class StringUtils {
     public static bool HasBalancedBrackets(string input) {
@@ -40,7 +40,7 @@ public static class StringUtils {
         return bracketsStack.Count <= 0;
     }
 
-    private static string ReverseText(string input) {
+    public static string ReverseText(string input) {
         StringBuilder stringBuilder = new StringBuilder();
 
         var stack = new Stack<char>();

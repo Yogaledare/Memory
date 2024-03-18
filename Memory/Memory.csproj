@@ -12,4 +12,8 @@
 	  <PackageReference Include="LanguageExt.Core" Version="4.4.8" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\IOValidation\IOValidation.csproj" />
+	</ItemGroup>
+
 </Project>

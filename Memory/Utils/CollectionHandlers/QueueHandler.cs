@@ -1,7 +1,7 @@
 ﻿using LanguageExt;
 using LanguageExt.Common;
 
-namespace Memory.CollectionExaminer.Handlers;
+namespace Memory.Utils.CollectionHandlers;
 
 public class QueueHandler : ICollectionHandler {
     public MenuConf MenuConf { get; } = new MenuConf("queue", false, true);

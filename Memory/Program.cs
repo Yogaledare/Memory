@@ -1,8 +1,8 @@
-﻿using System.Text;
-using Memory.CollectionExaminer;
-using Memory.CollectionExaminer.Handlers;
-using static Memory.CollectionExaminer.CollectionExaminer;
-using static Memory.CollectionExaminer.EvenOddUtils;
+﻿using Memory.Utils.CollectionHandlers;
+using static Memory.Utils.CollectionExaminer;
+using static Memory.Utils.EvenOddUtils;
+using static Memory.Utils.StringUtils;
+using static IOValidation.IOValidator; 
 
 namespace Memory {
     partial class Program {
@@ -11,7 +11,7 @@ namespace Memory {
         /// </summary>
         /// <param name="args"></param>
         static void Main() {
-            // MainLoop();
+            MainLoop();
             // var fib = EvenOddUtils.IterativeFibonacci(18);
 
             // Console.WriteLine(fib);
@@ -58,6 +58,15 @@ namespace Memory {
                     case '4':
                         CheckParanthesis();
                         break;
+                    case '5':
+                        ReverseString();
+                        break;
+                    case '6':
+                        Fibonacci();
+                        break;
+                    case '7':
+                        Even();
+                        break;
                     /*
                      * Extend the menu to include the recursive
                      * and iterative exercises.
@@ -74,6 +83,9 @@ namespace Memory {
             }
         }
 
+
+
+        
         /// <summary>
         /// Examines the datastructure List
         /// </summary>
@@ -101,16 +113,70 @@ namespace Memory {
 
 
         static void CheckParanthesis() {
-            Console.WriteLine("Input a string to check if it has balanced brackets: ");
-            var input = Console.ReadLine();
-            var balanced = StringUtils.HasBalancedBrackets(input ?? "");
+            const string prompt = "Input a string to check if it has balanced brackets: ";
+            var input = RetrieveInput(prompt, ValidatePlainString);
+            var balanced = HasBalancedBrackets(input);
             var insert = balanced ? "balanced" : "unbalanced";
             Console.WriteLine($"The string has {insert} brackets");
         }
 
-        
+
+        private static void ReverseString() {
+            const string prompt = "Input a string to reverse: ";
+            var input = RetrieveInput(prompt, ValidatePlainString);
+            var reversed = ReverseText(input ?? "");
+            Console.WriteLine($"Reversed: {reversed}");
+        }
 
 
+        private static void Fibonacci() {
+            const string prompt = "Input positive integer n for (n:th) Fibonacci number: ";
+            var input = RetrieveInput(prompt, ValidateNumber); 
+            var recursiveFibonacci = RecursiveFibonacci(input);
+            var iterativeFibonacci = IterativeFibonacci(input);
+            var output = $"{input}:th Fibonacci number: {recursiveFibonacci} (recursive), {iterativeFibonacci} (iterative)";
+            Console.WriteLine(output);
+        }
+
+
+        private static void Even() {
+            const string prompt = "Input positive integer n for (n:th) even number: ";
+            var input = RetrieveInput(prompt, ValidateNumber);
+            var recursiveEven = RecursiveEven(input);
+            var iterativeEven = IterativeEven(input);
+            var output = $"{input}:th even number: {recursiveEven} (recursive), {iterativeEven} (iterative)";
+            Console.WriteLine(output);
+        }
     }
 }
 
+
+
+            
+            
+// Console.WriteLine("Input positive integer n for (n:th) Fibonacci number: ");
+// var input = Console.ReadLine();
+// if (string.IsNullOrEmpty(input)) {
+//     Console.WriteLine("wrong input");
+//     return;
+// }
+//
+// var n = int.Parse(input);
+//
+// if (n < 0) {
+//     Console.WriteLine("wrong input");
+//     return;
+// }
+
+
+
+            
+            
+// Console.WriteLine("Input a string to reverse: ");
+// var input = Console.ReadLine();
+
+
+
+// Console.WriteLine("Input a string to check if it has balanced brackets: ");
+// var input = Console.ReadLine();
+// var balanced = HasBalancedBrackets(input ?? "");
