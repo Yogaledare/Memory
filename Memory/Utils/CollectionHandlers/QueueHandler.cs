@@ -4,7 +4,9 @@ using LanguageExt.Common;
 namespace Memory.Utils.CollectionHandlers;
 
 public class QueueHandler : ICollectionHandler {
-    public MenuConf MenuConf { get; } = new MenuConf("queue", false, true);
+
+    public string Name { get; } = "Queue";
+    public bool IsStackOrQueue { get; } = true;
 
     private readonly Queue<string> _queue = new Queue<string>();
 

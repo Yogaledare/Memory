@@ -1,26 +1,33 @@
 ﻿using LanguageExt;
 using LanguageExt.Common;
 using Memory.Utils.CollectionHandlers;
+using IOValidation;
+using static IOValidation.IOValidator; 
 
 namespace Memory.Utils;
 
 public static class CollectionExaminer {
     public static void ExamineCollection(ICollectionHandler collectionHandler) {
-        PrintMenu(collectionHandler.MenuConf);
+        PrintMenu(collectionHandler);
 
         while (true) {
-            var commandResult = AskForCommand();
+            // var commandResult = AskForCommand();
+            var isStackOrQueue = collectionHandler.IsStackOrQueue;
 
-            var shouldBreakLoop = commandResult.Match(
-                Succ: command => {
-                    var shouldBreak = ProcessCommand(collectionHandler, command);
-                    return shouldBreak;
-                },
-                Fail: exception => {
-                    Console.WriteLine((string?) exception.Message);
-                    return false;
-                }
-            );
+            var command = RetrieveInput("Command: ", input => ValidateCommand(input, isStackOrQueue));
+
+            var shouldBreakLoop = ProcessCommand(collectionHandler, command); 
+            
+            // var shouldBreakLoop = commandResult.Match(
+            //     Succ: command => {
+            //         var shouldBreak = ProcessCommand(collectionHandler, command);
+            //         return shouldBreak;
+            //     },
+            //     Fail: exception => {
+            //         Console.WriteLine((string?) exception.Message);
+            //         return false;
+            //     }
+            // );
 
             if (shouldBreakLoop) {
                 break;
@@ -28,14 +35,14 @@ public static class CollectionExaminer {
         }
     }
 
-    private static void PrintMenu(MenuConf menuConf) {
+    private static void PrintMenu(ICollectionHandler collectionHandler) {
         Console.WriteLine();
         Console.WriteLine("Available commands:");
-        Console.WriteLine($"+input to add to {menuConf.CollectionName}");
-        var removeCommand = menuConf.RemoveTakesArgument ? "-input" : "-";
-        Console.WriteLine($"{removeCommand} to remove from {menuConf.CollectionName}");
+        Console.WriteLine($"+input to add to {collectionHandler.Name}");
+        var removeCommand = collectionHandler.IsStackOrQueue ?  "-" : "-input";
+        Console.WriteLine($"{removeCommand} to remove from {collectionHandler.Name}");
 
-        if (menuConf.GivePresetOption) {
+        if (collectionHandler.IsStackOrQueue) {
             Console.WriteLine($"l to run preset input sequence (ICA queue)");
         }
 
@@ -43,22 +50,22 @@ public static class CollectionExaminer {
         Console.WriteLine();
     }
 
-    private record Command(char Nav, Option<string> MaybeValue);
+    // private record Command(char Nav, Option<string> MaybeValue);
 
-    private static Result<Command> AskForCommand() {
-        var input = Console.ReadLine();
-        if (string.IsNullOrEmpty(input)) {
-            var error = new InvalidOperationException("Input is null or empty.");
-            return new Result<Command>(error);
-        }
+    // private static Result<IOValidator.Command> AskForCommand() {
+    //     var input = Console.ReadLine();
+    //     if (string.IsNullOrEmpty(input)) {
+    //         var error = new InvalidOperationException("Input is null or empty.");
+    //         return new Result<IOValidator.Command>(error);
+    //     }
+    //
+    //     var nav = input[0];
+    //     var value = input[1..];
+    //     var maybeValue = string.IsNullOrEmpty(value) ? Option<string>.None : Option<string>.Some(value);
+    //     return new IOValidator.Command(nav, maybeValue);
+    // }
 
-        var nav = input[0];
-        var value = input[1..];
-        var maybeValue = string.IsNullOrEmpty(value) ? Option<string>.None : Option<string>.Some(value);
-        return new Command(nav, maybeValue);
-    }
-
-    private static bool ProcessCommand(ICollectionHandler collectionHandler, Command command) {
+    private static bool ProcessCommand(ICollectionHandler collectionHandler, IOValidator.Command command) {
         var nav = command.Nav;
         var maybeValue = command.MaybeValue;
 
@@ -70,19 +77,19 @@ public static class CollectionExaminer {
                 RemoveAction(collectionHandler, maybeValue);
                 break;
             case 'l':
-                if (!collectionHandler.MenuConf.GivePresetOption) {
-                    Console.WriteLine("Bad input. Try again.");
-                    break;
-                }
+                // if (!collectionHandler.MenuConf.IsStackOrQueue) {
+                //     Console.WriteLine("Bad input. Try again.");
+                //     break;
+                // }
 
                 ICAExampleAction(collectionHandler);
                 break;
             case 'q':
-                Console.WriteLine($"Leaving {collectionHandler.MenuConf.CollectionName} examiner...");
+                Console.WriteLine($"Leaving {collectionHandler.Name} examiner...");
                 return true;
-            default:
-                Console.WriteLine("Bad input. Try again.");
-                break;
+            // default:
+            //     Console.WriteLine("Bad input. Try again.");
+            //     break;
         }
 
         return false;
@@ -92,7 +99,7 @@ public static class CollectionExaminer {
         var performed = maybeValue.Match(
             Some: value => {
                 collectionHandler.Add(value);
-                Console.WriteLine($"Added {value} to {collectionHandler.MenuConf.CollectionName}");
+                Console.WriteLine($"Added {value} to {collectionHandler.Name}");
                 var statusUpdate = collectionHandler.GetRepresentation();
                 Console.WriteLine(statusUpdate);
                 return true;
@@ -108,7 +115,7 @@ public static class CollectionExaminer {
         var removalResult = collectionHandler.Remove(maybeValue);
 
         var result = removalResult.Match(
-            Succ: removedItem => $"Removed {removedItem} from {collectionHandler.MenuConf.CollectionName}",
+            Succ: removedItem => $"Removed {removedItem} from {collectionHandler.Name}",
             Fail: err => $"Could not remove: {err.Message}");
 
         Console.WriteLine(result);

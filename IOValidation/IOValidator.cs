@@ -116,19 +116,19 @@ public static class IOValidator {
 
     public static Result<Command> ValidateCommand(string? input, bool isStackOrQueue) {
         if (string.IsNullOrEmpty(input)) {
-            var error = new InvalidOperationException("Input is null or empty.");
+            var error = new InvalidOperationException("Error: null or empty input");
             return new Result<Command>(error);
         }
 
         var nav = input[0];
         var value = input[1..];
 
-        var shouldTakeNoArg = new bool[] {
+        var  shouldTakeArg= new bool[] {
             nav is '+',
             nav is '-' && !isStackOrQueue
         };
 
-        var shouldTakeArg = new bool[] {
+        var shouldTakeNoArg = new bool[] {
             nav is '-' && isStackOrQueue,
             nav is 'q',
             nav is 'l' && isStackOrQueue
@@ -143,10 +143,10 @@ public static class IOValidator {
         if (shouldTakeNoArg.Any(x => x)) {
             return string.IsNullOrWhiteSpace(value)
                 ? new Result<Command>(new Command(nav, Option<string>.None))
-                : new Result<Command>(new ArgumentException("No argument needed"));
+                : new Result<Command>(new ArgumentException("Error: No argument needed"));
         }
 
-        return new Result<Command>(new ArgumentException("Invalid input"));
+        return new Result<Command>(new ArgumentException("Error: Invalid input"));
     }
 }
 

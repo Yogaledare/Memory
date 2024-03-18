@@ -4,7 +4,9 @@ using LanguageExt.Common;
 namespace Memory.Utils.CollectionHandlers;
 
 public class StackHandler : ICollectionHandler {
-    public MenuConf MenuConf { get; } = new MenuConf("stack", false, true);
+
+    public string Name { get; } = "Stack";
+    public bool IsStackOrQueue { get; } = true;
 
     private readonly Stack<string> _stack = new Stack<string>();
 
