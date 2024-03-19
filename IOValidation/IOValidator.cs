@@ -97,6 +97,36 @@ public static class IOValidator {
 
 
     /// <summary>
+    /// Validates that the input string represents a positive integer greater than zero.
+    /// </summary>
+    /// <param name="input">The input string to validate.</param>
+    /// <returns>
+    /// A Result containing the parsed positive integer if valid; otherwise, an error.
+    /// The method returns an error if the input is null, empty, not an integer, or is less than or equal to zero.
+    /// </returns>
+    /// <remarks>
+    /// This method extends <see cref="ValidateNumber"/> to ensure the input represents a positive integer.
+    /// A positive integer is defined as any whole number greater than zero.
+    /// In case of failure, the Result will contain a <see cref="ValidationException"/> with an appropriate error message.
+    /// </remarks>
+    public static Result<int> ValidatePositiveInt(string? input) {
+        var numberResult = ValidateNumber(input);
+
+        return numberResult.Match(
+            Succ: number => {
+                if (number == 0) {
+                    var error = new ValidationException("Error: cannot be 0");
+                    return new Result<int>(error);
+                }
+
+                return number;
+            },
+            Fail: exception => new Result<int>(exception)
+        );
+    }
+
+
+    /// <summary>
     /// Validates that the input string is neither null, empty, nor consists solely of whitespace.
     /// </summary>
     /// <param name="input">The input string to validate.</param>
@@ -123,7 +153,7 @@ public static class IOValidator {
     /// <param name="MaybeValue">An optional value associated with the command. Presence and requirement of the value depends on the command type.</param>
     public record Command(char Nav, Option<string> MaybeValue);
 
-    
+
     /// <summary>
     /// Validates user input as a command for collection manipulation, taking into account whether the collection treats '-' as requiring an argument.
     /// </summary>

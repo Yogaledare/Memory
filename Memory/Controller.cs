@@ -143,7 +143,7 @@ public class Controller {
     /// </remarks>
     public static void Even() {
         const string prompt = "Input positive integer n for (n:th) even number: ";
-        var input = IOValidator.RetrieveInput(prompt, IOValidator.ValidateNumber);
+        var input = IOValidator.RetrieveInput(prompt, IOValidator.ValidatePositiveInt);
         var recursiveEven = EvenOddUtils.RecursiveEven(input);
         var iterativeEven = EvenOddUtils.IterativeEven(input);
         var output = $"{input}:th even number: {recursiveEven} (recursive), {iterativeEven} (iterative)";
