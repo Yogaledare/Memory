@@ -79,12 +79,12 @@ klarhet:
 Denna metod ( _se bild ovan_ ) kommer allt att köras på stacken. Detta då alla _value types_
 deklareras i en metod, som läggs på stacken.
 
-```
+
 I exemplet till vänster kommer dock MyValue
 att ligga på heapen , då den deklarerats i en
 klass som är en reference type.
-```
-```
+
+
 Den huvudsakliga skillnaden mellan dessa två,
 är att all information i det första exemplet
 kommer att raderas när det är färdigkört då
@@ -93,7 +93,7 @@ exempel två kommer fortsätta ta upp plats på
 heapen även efter stacken är klar med den. Den
 kommer ligga där tills GC (Garbage Collector)
 tar hand om den.
-```
+
 Frågor:
 
 1. Hur fungerar _stacken_ och _heapen_? Förklara gärna med exempel eller skiss på dess
@@ -208,15 +208,16 @@ _Övning 5: Rekursion_
     _f(n-1) + f(n-2))_
 
 
-```
-Övning 6: Iteration
+
+_Övning 6: Iteration_
+
 Nu när ni är bekanta med rekursion är det dags att kolla på iteration. Iteration är en
 funktion som upprepar samma sak till dess att målet är uppnått. Så en iterativ funktion för
 att göra föregående beräkning om det n:te udda talet skulle se ut:
-```
-```
+
+
 Denna metod börjar från 1 och adderar 2 till dess att resultat blir det n :te udda talet.
-```
+
 1. Illustrera på papper förloppen för _IterativeOdd(1)_ , _IterativeOdd(3)_ och
     _IterativeOdd(5)_ för att förstå iterationen.
 2. Skapa en _IterativeEven(int n)_ funktion för att iterativt beräkna det _n_ :te jämna talet.
