@@ -160,9 +160,7 @@ kommer tas bort sist ( **_pop_** ).
 1. Simulera ännu en gång ICA-kön på papper. Denna gång med en _stack_. Varför är det
     inte så smart att använda en _stack_ i det här fallet?
 2. Implementera en ReverseText-metod som läser in en sträng från användaren och
-    med hjälp av en stack vänder ordning på teckenföljden för att sedan skriva ut den
-
-## omvända strängen till användaren.
+    med hjälp av en stack vänder ordning på teckenföljden för att sedan skriva ut den omvända strängen till användaren.
 
 _Övning 4: CheckParenthesis()_
 
