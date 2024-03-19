@@ -200,12 +200,12 @@
 
 // 2. Skriv en RecursiveEven(int n) metod som rekursivt beräknar det n:te jämna talet. 
 
-// Svar: se implementation. 
+// Svar: se implementation. Jag räknar 0 som det första jämna talet.  
 
 
 // 3. Implementera en rekursiv funktion för att beräkna tal i fibonaccisekvensen: (f(n) = f(n-1) + f(n-2)) 
 
-// Svar: se implementation. 
+// Svar: se implementation. Jag har indexerat från 0, dvs F_0 = 0, F_1 = 1, ...
 
 
 
