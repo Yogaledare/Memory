@@ -12,7 +12,7 @@ public class Controller {
     public static void MainMenu() {
         while (true) {
             Console.WriteLine(
-                "Please navigate through the menu by inputting the number \n(1, 2, 3, 4, 0) of your choice"
+                "Please navigate through the menu by inputting the number \n(1, 2, 3, 4, 5, 6, 7, 0) of your choice"
                 + "\n1. Examine a List"
                 + "\n2. Examine a Queue"
                 + "\n3. Examine a Stack"
