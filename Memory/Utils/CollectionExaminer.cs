@@ -6,28 +6,25 @@ using static IOValidation.IOValidator;
 
 namespace Memory.Utils;
 
+/// <summary>
+/// Provides functionality to examine and manipulate collections through a console interface.
+/// </summary>
 public static class CollectionExaminer {
+    /// <summary>
+    /// Initiates a loop that processes user commands to manipulate the specified collection.
+    /// </summary>
+    /// <param name="collectionHandler">The collection handler that defines how the collection is manipulated.</param>
+    /// <remarks>
+    /// The method continuously prompts the user for commands until the 'quit' command is entered.
+    /// Commands include adding to, removing from, and displaying the state of the collection.
+    /// </remarks>
     public static void ExamineCollection(ICollectionHandler collectionHandler) {
         PrintMenu(collectionHandler);
 
         while (true) {
-            // var commandResult = AskForCommand();
             var isStackOrQueue = collectionHandler.IsStackOrQueue;
-
             var command = RetrieveInput("Command: ", input => ValidateCommand(input, isStackOrQueue));
-
             var shouldBreakLoop = ProcessCommand(collectionHandler, command); 
-            
-            // var shouldBreakLoop = commandResult.Match(
-            //     Succ: command => {
-            //         var shouldBreak = ProcessCommand(collectionHandler, command);
-            //         return shouldBreak;
-            //     },
-            //     Fail: exception => {
-            //         Console.WriteLine((string?) exception.Message);
-            //         return false;
-            //     }
-            // );
 
             if (shouldBreakLoop) {
                 break;
@@ -35,6 +32,14 @@ public static class CollectionExaminer {
         }
     }
 
+    /// <summary>
+    /// Prints the command menu to the console, based on the capabilities of the provided collection handler.
+    /// </summary>
+    /// <param name="collectionHandler">The collection handler whose capabilities determine the available commands.</param>
+    /// <remarks>
+    /// This method displays a dynamic command menu which may include options to add, remove, or process items in the collection,
+    /// as well as running a preset input sequence for stack or queue collections.
+    /// </remarks>
     private static void PrintMenu(ICollectionHandler collectionHandler) {
         Console.WriteLine();
         Console.WriteLine("Available commands:");
@@ -50,21 +55,16 @@ public static class CollectionExaminer {
         Console.WriteLine();
     }
 
-    // private record Command(char Nav, Option<string> MaybeValue);
-
-    // private static Result<IOValidator.Command> AskForCommand() {
-    //     var input = Console.ReadLine();
-    //     if (string.IsNullOrEmpty(input)) {
-    //         var error = new InvalidOperationException("Input is null or empty.");
-    //         return new Result<IOValidator.Command>(error);
-    //     }
-    //
-    //     var nav = input[0];
-    //     var value = input[1..];
-    //     var maybeValue = string.IsNullOrEmpty(value) ? Option<string>.None : Option<string>.Some(value);
-    //     return new IOValidator.Command(nav, maybeValue);
-    // }
-
+    /// <summary>
+    /// Processes a single command entered by the user, performing actions on the collection accordingly.
+    /// </summary>
+    /// <param name="collectionHandler">The collection handler to perform actions on.</param>
+    /// <param name="command">The command to process, including the action to take and any necessary value.</param>
+    /// <returns>True if the command indicates to exit the loop, otherwise false.</returns>
+    /// <remarks>
+    /// Commands processed include adding items to, removing items from the collection, running a preset input sequence,
+    /// and quitting the examination loop.
+    /// </remarks>
     private static bool ProcessCommand(ICollectionHandler collectionHandler, IOValidator.Command command) {
         var nav = command.Nav;
         var maybeValue = command.MaybeValue;
@@ -77,24 +77,24 @@ public static class CollectionExaminer {
                 RemoveAction(collectionHandler, maybeValue);
                 break;
             case 'l':
-                // if (!collectionHandler.MenuConf.IsStackOrQueue) {
-                //     Console.WriteLine("Bad input. Try again.");
-                //     break;
-                // }
-
                 ICAExampleAction(collectionHandler);
                 break;
             case 'q':
                 Console.WriteLine($"Leaving {collectionHandler.Name} examiner...");
                 return true;
-            // default:
-            //     Console.WriteLine("Bad input. Try again.");
-            //     break;
         }
 
         return false;
     }
 
+    /// <summary>
+    /// Performs an 'add' action on the collection, using the provided value.
+    /// </summary>
+    /// <param name="collectionHandler">The collection handler on which to perform the add action.</param>
+    /// <param name="maybeValue">The value to add to the collection, if present.</param>
+    /// <remarks>
+    /// If no value is provided, the method outputs a message indicating that a value is needed.
+    /// </remarks>
     private static void AddAction(ICollectionHandler collectionHandler, Option<string> maybeValue) {
         var performed = maybeValue.Match(
             Some: value => {
@@ -111,6 +111,14 @@ public static class CollectionExaminer {
         );
     }
 
+    /// <summary>
+    /// Performs a 'remove' action on the collection, optionally using the provided value.
+    /// </summary>
+    /// <param name="collectionHandler">The collection handler from which to remove an item.</param>
+    /// <param name="maybeValue">An optional value indicating which item to remove from the collection.</param>
+    /// <remarks>
+    /// The behavior of the removal depends on the collection type and whether a value is provided.
+    /// </remarks>
     private static void RemoveAction(ICollectionHandler collectionHandler, Option<string> maybeValue) {
         var removalResult = collectionHandler.Remove(maybeValue);
 
@@ -123,6 +131,14 @@ public static class CollectionExaminer {
         Console.WriteLine(statusUpdate);
     }
 
+    /// <summary>
+    /// Runs a preset sequence of add and remove actions on the collection.
+    /// </summary>
+    /// <param name="collectionHandler">The collection handler on which to perform the preset actions.</param>
+    /// <remarks>
+    /// This method demonstrates a typical use case or test sequence for manipulating the collection,
+    /// such as simulating a queue at a grocery store.
+    /// </remarks>
     private static void ICAExampleAction(ICollectionHandler collectionHandler) {
         AddAction(collectionHandler, "Kalle");
         AddAction(collectionHandler, "Greta");

@@ -96,6 +96,11 @@ public static class IOValidator {
     }
 
 
+    /// <summary>
+    /// Validates that the input string is neither null, empty, nor consists solely of whitespace.
+    /// </summary>
+    /// <param name="input">The input string to validate.</param>
+    /// <returns>A Result containing the original string if valid; otherwise, an error.</returns>
     public static Result<string> ValidatePlainString(string? input) {
         if (string.IsNullOrEmpty(input)) {
             var error = new ValidationException("Error: null or empty input");
@@ -111,9 +116,23 @@ public static class IOValidator {
     }
 
 
+    /// <summary>
+    /// Represents a command with an optional value.
+    /// </summary>
+    /// <param name="Nav">The navigation character indicating the action to be taken.</param>
+    /// <param name="MaybeValue">An optional value associated with the command. Presence and requirement of the value depends on the command type.</param>
     public record Command(char Nav, Option<string> MaybeValue);
 
-
+    
+    /// <summary>
+    /// Validates user input as a command for collection manipulation, taking into account whether the collection treats '-' as requiring an argument.
+    /// </summary>
+    /// <param name="input">The raw input string from the user.</param>
+    /// <param name="isStackOrQueue">Indicates whether the command is for a stack or queue, which affects how '-' commands are interpreted.</param>
+    /// <returns>A Result containing a Command object if the input is valid; otherwise, an error.</returns>
+    /// <remarks>
+    /// This method differentiates between commands that do and do not require additional arguments based on the collection type (e.g., stack or queue) and the specific command given.
+    /// </remarks>
     public static Result<Command> ValidateCommand(string? input, bool isStackOrQueue) {
         if (string.IsNullOrEmpty(input)) {
             var error = new InvalidOperationException("Error: null or empty input");
@@ -123,7 +142,7 @@ public static class IOValidator {
         var nav = input[0];
         var value = input[1..];
 
-        var  shouldTakeArg= new bool[] {
+        var shouldTakeArg = new bool[] {
             nav is '+',
             nav is '-' && !isStackOrQueue
         };
@@ -140,6 +159,7 @@ public static class IOValidator {
                 Succ: s => new Command(nav, Option<string>.Some(s)),
                 Fail: e => new Result<Command>(e));
         }
+
         if (shouldTakeNoArg.Any(x => x)) {
             return string.IsNullOrWhiteSpace(value)
                 ? new Result<Command>(new Command(nav, Option<string>.None))
@@ -149,98 +169,3 @@ public static class IOValidator {
         return new Result<Command>(new ArgumentException("Error: Invalid input"));
     }
 }
-
-
-
-// var stringValidationResult = ValidatePlainString(value);
-
-
-// var shouldTakeNoArg = nav is '+' || nav is '-' && !isStackOrQueue;
-// var shouldTakeArg = nav is '-' && isStackOrQueue || nav is 'q' || nav is 'l' && isStackOrQueue;
-
-
-// if (nav is '+' || nav is '-' && !isStackOrQueue) {
-//     return stringValidationResult.Match(
-//         Succ: s => new Command(nav, s),
-//         Fail: e => new Result<Command>(e)
-//     );
-// }
-//
-// if (nav is '-' && isStackOrQueue) {
-//     return stringValidationResult.Match(
-//         Succ: s => hasArgumentFail,
-//         Fail: e => lacksArgumentSucc
-//     );
-// }
-//
-// if (nav is '-' && !isStackOrQueue) {
-//     return stringValidationResult.Match(
-//         Succ: s => new Command(nav, s),
-//         Fail: e => new Result<Command>(e)
-//     );
-// }
-//
-// if (nav is 'q') {
-//     return stringValidationResult.Match(
-//         Succ: s => hasArgumentFail,
-//         Fail: e => lacksArgumentSucc
-//     );
-// }
-//
-// if (nav is 'l' && isStackOrQueue) {
-//     return stringValidationResult.Match(
-//         Succ: s => hasArgumentFail,
-//         Fail: e => lacksArgumentSucc
-//     );
-// }
-
-
-// var hasArgumentFail = new Result<Command>(new ArgumentException("No argument needed"));
-// var lacksArgumentSucc = new Command(nav, Option<string>.None);
-
-
-// var listCommands = "+-q";
-// var stackQueueCommands = "+-ql";
-
-
-//
-//
-//         
-//         
-// var isValueValidString = ValidatePlainString(value).Match(
-//     Succ: s => true, 
-//     Fail: e => false
-// );
-//
-//
-
-
-// if (!isStackOrQueue) {
-//     if (nav is '+' or '-') {
-//         // var stringValidationResult = ValidatePlainString(value);
-//         return stringValidationResult.Match(
-//             Succ: s => new Command(nav, Option<string>.Some(s)),
-//             Fail: e => new Result<Command>(e)
-//         );
-//     }
-//
-// }
-//
-// else {
-//     if (nav is '+') {
-//         // var stringValidationResult = ValidatePlainString(value);
-//         return stringValidationResult.Match(
-//             Succ: s => new Command(nav, Option<string>.Some(s)),
-//             Fail: e => new Result<Command>(e)
-//         ); 
-//     }
-//             
-//     if (nav is -) 
-//             
-// }
-// if (!listCommands.Contains(nav)) {
-//     var error = new ArgumentException("Command has to start with +, - or q");
-//     return new Result<Command>(error);
-// }
-//
-// if ()
